@@ -1,0 +1,79 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+defaults:
+  - override /energy: gmm
+  - override /model: pis
+  - override /model/noise_schedule: linear
+
+tags: ["GMM", "PIS"]
+
+seed: 12345
+
+logger:
+  wandb:
+    tags: ${tags}
+    group: "gmm"
+
+callbacks:
+  model_checkpoint:
+    monitor: "val/2-Wasserstein"
+    save_top_k: -1
+
+trainer:
+  check_val_every_n_epoch: 1
+  
+model:
+  net:
+    num_layers: 3
+    channels: 128
+  nll_integration_method: dopri5
+  use_richardsons: false
+  logz_with_cfm: false
+  nll_with_cfm: false
+
+
+  # noise_schedule:
+    # _target_: dem.models.components.noise_schedules.LinearNoiseSchedule
+    # sigma_min: 0.00001
+    # sigma_max: 1.0
+
+  buffer:
+    prioritize: false
+
+  partial_prior:
+    _target_: dem.energies.base_prior.Prior
+    _partial_: true
+    dim: 2
+    # scale: 5
+
+  clipper:
+    _target_: dem.models.components.clipper.Clipper
+    should_clip_scores: False
+    should_clip_log_rewards: False
+    max_score_norm: 70
+    min_log_reward: null
+
+  lambda_weighter:
+    _target_: dem.models.components.lambda_weighter.BasicLambdaWeighter
+    _partial_: true
+    epsilon: 1e-3
+
+  optimizer:
+    lr: 1e-3
+
+  pis_scale: 30.
+  diffusion_scale: 30.0
+  time_range: 25.
+  num_integration_steps: 1000
+
+  # num_estimator_mc_samples: 500
+  num_samples_to_generate_per_epoch: 1000
+
+  # # this has to be max 1000 since test_set is 1000
+  eval_batch_size: 1000
+  # scheduler: null

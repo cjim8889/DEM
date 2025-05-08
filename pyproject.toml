@@ -1,25 +1,38 @@
-[tool.pytest.ini_options]
-addopts = [
-  "--color=yes",
-  "--durations=0",
-  "--strict-markers",
-  "--doctest-modules",
+[project]
+name = "dem"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "bgflow",
+    "black>=25.1.0",
+    "einops>=0.8.1",
+    "fab",
+    "flake8>=7.2.0",
+    "hydra-colorlog>=1.2.0",
+    "hydra-core>=1.0",
+    "hydra-optuna-sweeper>=1.2.0",
+    "isort>=6.0.1",
+    "larsflow",
+    "lightning>=2.0.0",
+    "nflows>=0.14",
+    "normflows>=1.7.3",
+    "numpy<2.0.0",
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
+    "rich>=14.0.0",
+    "rootutils>=1.0.7",
+    "scikit-learn>=1.6.1",
+    "scipy>=1.15.2",
+    "torch>=2.0.0",
+    "torchcfm>=1.0.7",
+    "torchdiffeq>=0.2.5",
+    "torchmetrics>=0.11.4",
+    "torchvision>=0.15.0",
 ]
-filterwarnings = [
-  "ignore::DeprecationWarning",
-  "ignore::UserWarning",
-]
-log_cli = "True"
-markers = [
-  "slow: slow tests",
-]
-minversion = "6.0"
-testpaths = "tests/"
 
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: nocover",
-    "raise NotImplementedError",
-    "raise NotImplementedError()",
-    "if __name__ == .__main__.:",
-]
+[tool.uv.sources]
+larsflow = { git = "https://github.com/VincentStimper/resampled-base-flows.git" }
+bgflow = { git = "https://github.com/atong01/bgflow" }
+fab = { git = "https://github.com/jarridrb/fab-torch.git" }
